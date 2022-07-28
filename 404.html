@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A application from Innovative Tech Authority">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BargainKY">
+  <meta name="google-signin-client_id" content="1080121169881-q57lnsqmnjub9mlh2s2g863sc5glh5r7.apps.googleusercontent.com">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Bargains Cayman</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" type="text/css" href="splash/style.css">
+  <script src="splash/splash.js"></script>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+</head>
+<body>
+  <picture id="splash">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt=""/>
+  </picture>
+  <!-- This script installs service_worker.js to provide PWA functionality to
+       application. For more information, see:
+       https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script>
+    var serviceWorkerVersion = null;
+    var scriptLoaded = false;
+    function loadMainDartJs() {
+      if (scriptLoaded) {
+        return;
+      }
+      scriptLoaded = true;
+      var scriptTag = document.createElement('script');
+      scriptTag.src = 'main.dart.js';
+      scriptTag.type = 'application/javascript';
+      document.body.append(scriptTag);
+    }
+
+    if ('serviceWorker' in navigator) {
+      // Service workers are supported. Use them.
+      window.addEventListener('load', function () {
+        // Wait for registration to finish before dropping the <script> tag.
+        // Otherwise, the browser will load the script multiple times,
+        // potentially different versions.
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+        navigator.serviceWorker.register(serviceWorkerUrl)
+          .then((reg) => {
+            function waitForActivation(serviceWorker) {
+              serviceWorker.addEventListener('statechange', () => {
+                if (serviceWorker.state == 'activated') {
+                  console.log('Installed new service worker.');
+                  loadMainDartJs();
+                }
+              });
+            }
+            if (!reg.active && (reg.installing || reg.waiting)) {
+              // No active web worker and we have installed or are installing
+              // one for the first time. Simply wait for it to activate.
+              waitForActivation(reg.installing ?? reg.waiting);
+            } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
+              // When the app updates the serviceWorkerVersion changes, so we
+              // need to ask the service worker to update.
+              console.log('New service worker available.');
+              reg.update();
+              waitForActivation(reg.installing);
+            } else {
+              // Existing service worker is still good.
+              console.log('Loading app from service worker.');
+              loadMainDartJs();
+            }
+          });
+
+        // If service worker doesn't succeed in a reasonable amount of time,
+        // fallback to plaint <script> tag.
+        setTimeout(() => {
+          if (!scriptLoaded) {
+            console.warn(
+              'Failed to load app from service worker. Falling back to plain <script> tag.',
+            );
+            loadMainDartJs();
+          }
+        }, 5000);
+      });
+    } else {
+      // Service workers not supported. Just drop the <script> tag.
+      loadMainDartJs();
+    }
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-messaging.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFPPhJB1581ZHQChfQyUsV1dKzS4t_2U4"></script>  
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-functions.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script type="text/javascript">
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js";
+  </script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" />
+   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+   <script>
+   const firebaseConfig = {
+  apiKey: "AIzaSyCFPPhJB1581ZHQChfQyUsV1dKzS4t_2U4",
+  authDomain: "caymanfoodservices-86e26.firebaseapp.com",
+  projectId: "caymanfoodservices-86e26",
+  storageBucket: "caymanfoodservices-86e26.appspot.com",
+  messagingSenderId: "74023569478",
+  appId: "1:74023569478:web:b4f4ad01f19b7fe833e247",
+  measurementId: "G-MVME6Y0NH9"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig,{
+  provider: new ReCaptchaV3Provider('G71642DF-09IB-4B26-G120-B05302ECTA35'),
+  isTokenAutoRefreshEnabled: true
+});
+const analytics = getAnalytics(app);
+    const appCheckApp = async () => {
+        let appCheckTokenResponse;
+        try {
+            appCheckTokenResponse = await firebase.appCheck().getToken(false);
+        } catch (err) {
+            return;
+        }
+        const apiResponse = await fetch('https://us-central1-caymanfoodservices-86e26.cloudfunctions.net/appCheckCFS', {
+            headers: {
+                'X-Firebase-AppCheck': appCheckTokenResponse.token,
+            }
+        });
+      };
+  </script>
+   <!-- <script>
+    const  firebaseConfig = {
+      apiKey: "AIzaSyCFPPhJB1581ZHQChfQyUsV1dKzS4t_2U4",
+  authDomain: "caymanfoodservices-86e26.firebaseapp.com",
+  projectId: "caymanfoodservices-86e26",
+  storageBucket: "caymanfoodservices-86e26.appspot.com",
+  messagingSenderId: "74023569478",
+  appId: "1:74023569478:web:b4f4ad01f19b7fe833e247",
+  measurementId: "G-MVME6Y0NH9"
+    };    
+    const appCheckApp = async () => {
+        let appCheckTokenResponse;
+        try {
+            appCheckTokenResponse = await firebase.appCheck().getToken(false);
+        } catch (err) {
+            return;
+        }
+        const apiResponse = await fetch('https://us-central1-caymanfoodservices-86e26.cloudfunctions.net/appCheckCFS', {
+            headers: {
+                'X-Firebase-AppCheck': appCheckTokenResponse.token,
+            }
+        });
+      };
+
+    
+    firebase.initializeApp(firebaseConfig,{
+  provider: new ReCaptchaV3Provider('G71642DF-09IB-4B26-G120-B05302ECTA35'),
+  isTokenAutoRefreshEnabled: true
+});
+    firebase.analytics();
+   
+  </script>  -->
+</body>
+</html>
